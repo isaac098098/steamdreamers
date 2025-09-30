@@ -30,12 +30,18 @@ else
 fi
 
 base="https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+
+# filter url's from cvs
+# requieres the miller package
+
 source=$(mlr --csv cut -f Link "$sb_clone_dir"/SB_publication_PMC.csv | tail -n +2)
 total=$(mlr --csv cut -f Link "$sb_clone_dir"/SB_publication_PMC.csv | tail -n +2 | wc -l)
 
 cn=0
 for publication_url in $source
 do
+    # required fields
+
     query=$(echo $publication_url | awk -F/ '{print $6}')
     esearch=$(curl -Ss "${base}/esearch.fcgi?db=pmc&term=${query}&usehistory=y")
 
@@ -43,7 +49,11 @@ do
     query_key=$(echo "$esearch" | grep -oP '(?<=<QueryKey>)[^<]+' | head -n 1)
     count=$(echo "$esearch" | grep -oP '(?<=<Count>)[0-9]+' | head -n 1)
 
+    # request format
+
     efetch_url="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&WebEnv=${web_env}&query_key=${query_key}&retstart=0&retmax=1&rettype=full&retmode=xml"
+
+    # download file
 
     curl -Ss -L -A "Mozilla/5.0" -o "$xml_dir/$query.xml" "$efetch_url"
 
