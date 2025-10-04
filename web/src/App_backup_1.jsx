@@ -7,10 +7,6 @@ function App() {
     const [selectedTags, setSelectedTags] = useState([]); // selected tags
     const [availableTags, setAvailableTags] = useState([]); // side panel
     const [treeKey, setTreeKey] = useState(0); // center tree
-    const [selectedArticle, setSelectedArticle] = useState(null); // selected article
-    const [searchText, setSearchText] = useState(""); // user's typed text
-    const [searchResults, setSearchResults] = useState([]); // filtered suggestions
-    const [tagCounts, setTagCounts] = useState({}); // tag counts
 
     const treeContainer = useRef(null);
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
@@ -27,34 +23,8 @@ function App() {
                 const uniqueTags = [...new Set(allTags)];
                 const shuffled = uniqueTags.sort(() => Math.random() - 0.5);
                 setTags(shuffled.slice(0, 5));
-
-                // tag counting
-                
-                const tagCountsTemp = {};
-                data.forEach(article => {
-                    article.tags.forEach(tag => {
-                        const lower = tag.toLowerCase();
-                        tagCountsTemp[lower] = (tagCountsTemp[lower] || 0) + 1;
-                    });
-                });
-                setTagCounts(tagCountsTemp);
             });
     }, []);
-
-    // filter tags
-
-    useEffect(() => {
-        if (!searchText) {
-            setSearchResults([]);
-            return;
-        }
-
-        const lowerSearch = searchText.toLowerCase();
-        const filtered = Object.keys(tagCounts)
-            .filter(tag => tag.toLowerCase().startsWith(lowerSearch))
-            .sort((a, b) => tagCounts[b] - tagCounts[a]);
-        setSearchResults(filtered);
-    }, [searchText, tagCounts]);
 
     // tree position
 
@@ -88,7 +58,6 @@ function App() {
         }
 
         // available tags now
- 
         const tagsSet = new Set();
         matchingArticles.forEach((a) => {
             a.tags.forEach((t) => {
@@ -122,7 +91,6 @@ function App() {
             ? matchingArticles.map((a) => ({
                 name: a.title,
                 accumulatedTags,
-                article: a,
             }))
             : [];
 
@@ -140,7 +108,7 @@ function App() {
     // clickable tag nodes
 
     const renderNode = ({ nodeDatum }) => {
-        const isTag = !nodeDatum.article;
+        const isTag = nodeDatum.children && nodeDatum.children.length > 0;
 
         const lines = nodeDatum.name.split(" ").reduce((acc, word) => {
             const lastLine = acc[acc.length - 1];
@@ -154,7 +122,7 @@ function App() {
 
         return (
             <g
-            style={{ cursor: "pointer" }}
+            style={{ cursor: isTag ? "pointer" : "default" }}
             onClick={() => {
                 if (isTag && nodeDatum.accumulatedTags) {
                     const { width } = treeContainer.current.getBoundingClientRect();
@@ -164,16 +132,6 @@ function App() {
                     
                     setTreeKey((prev) => prev + 1);
                     setSelectedTags(nodeDatum.accumulatedTags);
-                    setSelectedArticle(null);
-                } else if (nodeDatum.article) {
-                    setSelectedArticle(nodeDatum.article);
-                    setTimeout(() => {
-                        if (treeContainer.current) {
-                            const { width } = treeContainer.current.getBoundingClientRect();
-                            setTranslate({ x: width / 2, y: 50 });
-                            setTreeKey(prev => prev + 1); // forzar re-render del árbol
-                        }
-                    }, 0);
                 }
             }}
             >
@@ -223,58 +181,13 @@ function App() {
 
         {selectedTags.length === 0 && (
             <>
-            {/* search box */}
-            <div style={{ position: "relative", marginBottom: "1rem", width: "250px" }}>
-            <input
-                type="text"
-                placeholder="Search article..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                style={{ width: "100%", padding: "4px" }}
-            />
-
-            {/* search suggestions */}
-
-            {searchText && searchResults.length > 0 && (
-                <div
-                style={{
-                    position: "absolute",
-                        top: "100%",
-                        left: 0,
-                        right: 0,
-                        width: "100%",
-                        padding: "5px",
-                        maxHeight: "200px",
-                        overflowY: "auto",
-                        backgroundColor: "#fff",
-                        border: "1px solid #ccc",
-                        zIndex: 10,
-                }}
-                >
-                {searchResults.map((tag) => (
-                    <div
-                    key={tag}
-                    style={{ padding: "4px", cursor: "pointer" }}
-                    onClick={() => {
-                        setSelectedTags([tag]);
-                        setSearchText("");
-                        setSearchResults([]);
-                    }}
-                    >
-                    {tag} ({tagCounts[tag.toLowerCase()] || 0})
-                    </div>
-                ))}
-                </div>
-            )}
-            </div>
-
             <h2>Select any tag to begin</h2>
             <div
             style={{
                 display: "flex",
-                gap: "1rem",
-                flexWrap: "wrap",
-                justifyContent: "center",
+                    gap: "1rem",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
             }}
             >
             {tags.map((tag) => (
@@ -291,16 +204,8 @@ function App() {
         {selectedTags.length > 0 && (
             <>
             <button
-            onClick={() => {
-                setSelectedArticle(null)
-                setSelectedTags([])
-            }}
-            style={{
-                position: "absolute",
-                top: "6%",
-                left: "35px",
-                color: "#888",
-            }}
+            onClick={() => setSelectedTags([])}
+            style={{ marginBottom: "1rem" }}
             >
             Back to tags
             </button>
@@ -312,10 +217,10 @@ function App() {
             <div
             style={{
                 width: "250px",
-                height: "100%",
-                overflowY: "auto",
-                borderRight: "1px solid #ccc",
-                padding: "1rem",
+                    height: "100%",
+                    overflowY: "auto",
+                    borderRight: "1px solid #ccc",
+                    padding: "1rem",
             }}
             >
             <h3>Available Tags</h3>
@@ -338,7 +243,7 @@ function App() {
 
             {/* tree */}
 
-            <div style={{ flex: 1, overflow: "hidden", position: "relative" }} ref={treeContainer}>
+            <div style={{ flex: 1, overflow: "auto", position: "relative" }} ref={treeContainer}>
             <button
             onClick={() => {
                 if (treeContainer.current) {
@@ -349,9 +254,9 @@ function App() {
             }}
             style={{
                 position: "absolute",
-                right: "10px",
-                fontSize: "0.8rem",
-                color: "#888"
+                    right: "10px",
+                    fontSize: "0.8rem",
+                    color: "#888"
             }}
             >
             center
@@ -366,61 +271,6 @@ function App() {
                 translate={translate}
             />
             </div>
-
-            {/* right panel */}
-
-            {selectedArticle && (
-                <div
-                style={{
-                    width: "40%",
-                    borderLeft: "1px solid #ccc",
-                    padding: "1rem",
-                    overflowY: "auto",
-                }}
-                >
-                <h3>{selectedArticle.title}</h3>
-                <button onClick={() => {
-                    setSelectedArticle(null)
-                    setTimeout(() => {
-                        if (treeContainer.current) {
-                            const { width } = treeContainer.current.getBoundingClientRect();
-                            setTranslate({ x: width / 2, y: 50 });
-                            setTreeKey(prev => prev + 1); // forzar re-render del árbol
-                        }
-                    }, 0);
-                }}
-                style={{
-                    position: "absolute",
-                    top: 120,
-                    right: 57,
-                    fontSize: "0.8rem",
-                    color: "#888"
-                }}
-                >
-                close</button>
-                <h4>{selectedArticle.pmc_id}</h4>
-                {selectedArticle.journal && (
-                    <p>
-                    <strong>Journal:</strong> {selectedArticle.journal}
-                    </p>
-                )}
-                {selectedArticle.authors && (
-                    <p>
-                    <strong>Authors:</strong> {selectedArticle.authors.join(", ")}
-                    </p>
-                )}
-                {selectedArticle.abstract && (
-                    <p>
-                    <strong>Abstract:</strong> {selectedArticle.abstract}
-                    </p>
-                )}
-                {selectedArticle.tags && (
-                    <p>
-                    <strong>Tags:</strong> {selectedArticle.tags}
-                    </p>
-                )}
-                </div>
-            )}
             </div>
             </>
         )}
