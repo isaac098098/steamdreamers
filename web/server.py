@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from transformers import pipeline
 import torch
 import json
 
 app = FastAPI()
+app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")
 
 # allow react connection
 
