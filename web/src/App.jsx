@@ -403,7 +403,7 @@ function App() {
                 onClick={async () => {
                     setLoadingTranslation(true);
                     try {
-                        const res = await fetch("/translate", {
+                        const res = await fetch("http://127.0.0.1:8000/translate", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -571,7 +571,7 @@ function App() {
                     setQuestion("");
 
                     try {
-                        const res = await fetch("/ask", {
+                        const res = await fetch("http://127.0.0.1:8000/ask", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
