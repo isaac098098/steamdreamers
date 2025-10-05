@@ -403,7 +403,7 @@ function App() {
                 onClick={async () => {
                     setLoadingTranslation(true);
                     try {
-                        const res = await fetch("https://untranspired-ruthann-unfrequentative.ngrok-free.dev/translate", {
+                        const res = await fetch("/translate", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -571,7 +571,7 @@ function App() {
                     setQuestion("");
 
                     try {
-                        const res = await fetch("https://untranspired-ruthann-unfrequentative.ngrok-free.dev/ask", {
+                        const res = await fetch("/ask", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
