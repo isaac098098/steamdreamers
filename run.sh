@@ -28,5 +28,16 @@ fi
 
 # download articles and create json databases
 
-bash src/datasets/scrapper.sh
-python3 src/datasets/gen_db.py
+# bash src/datasets/scrapper.sh
+# python3 src/datasets/gen_db.py
+
+# launch app
+
+cd web/
+
+uvicorn server:app --host 0.0.0.0 --port 8000 &
+UVICORN_PID=$!
+
+trap "echo 'Stopping processes...'; kill $UVICORN_PID; exit 0" SIGINT SIGTERM
+
+npm run dev
