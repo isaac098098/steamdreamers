@@ -40,7 +40,7 @@ function App() {
     const [tagAnimation, setTagAnimation] = useState({ scale: 1, opacity: 1 }); // for tags animation
     const [frameSize, setFrameSize] = useState({ width: 250, height: "100%", zIndex: 10 }); // frame size used for animation
     const [panelAnimation, setPanelAnimation] = useState({ visible: true }); // for right panel animation
-    const [bgAnimation, setBgAnimation] = useState({ active: false, color: "#010A18" }); // for background color animation
+    const [bgAnimation, setBgAnimation] = useState({ active: false, color: "#ffffff" }); // for background color animation
     // load json
     
     useEffect(() => {
@@ -370,7 +370,7 @@ function App() {
             <>
             {/* Title with icon */}
             <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
-                <h1 style={{ color: "#fff", margin: "0 10px 0 0" }}>Tardigrade Explorer</h1>
+                <h1 style={{ color: "#000", margin: "0 10px 0 0" }}>Tardigrade Explorer</h1>
                 <img src="/tardigradeExplorerLog.png" alt="Tardigrade Explorer" style={{ height: "40px" }} />
             </div>
 
@@ -422,7 +422,7 @@ function App() {
             )}
             </div>
 
-            <h2 style={{ color: "#fff" }}>Select any tag to begin</h2>
+            <h2 style={{ color: "#000" }}>Select any tag to begin</h2>
             <div
             style={{
                 display: "flex",
@@ -461,7 +461,7 @@ function App() {
             ))}
             </div>
             {/* More selected tags */}
-            <h2 style={{ marginTop: "2rem", color: "#fff" }}> Most used tags:</h2>
+            <h2 style={{ marginTop: "2rem", color: "#000 " }}> Most used tags</h2>
             <div style={{ 
                 height: "400px",  
                 width: "90%",    
@@ -506,7 +506,7 @@ function App() {
                 setSelectedArticle(null)
                 setTagAnimation({ scale: 0.9, opacity: 0.5 });
     
-                setBgAnimation({ active: false, color: "#010A18" });
+                setBgAnimation({ active: false, color: "#ffffff" });
                 setTimeout(() => {
                     setTagAnimation({ scale: 1, opacity: 1 });
                     setSelectedTags([]);
@@ -676,7 +676,7 @@ function App() {
                 }}
                 style={{
                     position: "absolute",
-                    top: 125,
+                    top: 0,
                     fontSize: "0.8rem",
                     color: "#888"
                 }}
@@ -697,7 +697,7 @@ function App() {
                     }}
                     style={{
                         position: "absolute",
-                        top: 125,
+                        top: 0,
                         right: 500,
                         fontSize: "0.8rem",
                         color: "#888"
@@ -735,7 +735,7 @@ function App() {
                 }}
                 style={{
                     position: "absolute",
-                    top: 125,
+                    top: 0,
                     right: 57,
                     fontSize: "0.8rem",
                     color: "#888",
@@ -876,7 +876,7 @@ function App() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#010A18",
+            backgroundColor: "#ffffff",
             maxWidth: "100vw",
             width: "100%",
             boxSizing: "border-box",
@@ -908,8 +908,8 @@ function App() {
                         }}
                     />
                     <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.3rem" }}>
-                        <p style={{ margin: 0, fontSize: "0.8rem", color: "#fff" }}>SteamDreamers</p>
-                        <span style={{ color: "#aaa", fontSize: "0.7rem" }}>
+                        <p style={{ margin: 0, fontSize: "0.8rem", color: "#000" }}>SteamDreamers</p>
+                        <span style={{ color: "#000", fontSize: "0.7rem" }}>
                             © 2025
                         </span>
                     </div>

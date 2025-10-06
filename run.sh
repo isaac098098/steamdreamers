@@ -20,11 +20,15 @@ fi
 
 # python dependencies (not yet)
 
-# pip install --upgrade pip
-# if [ -f "requirements.txt" ]
-    # then
-    # pip install -r requirements.txt
-# fi
+cd web/
+
+npm install
+
+pip install --upgrade pip
+if [ -f "requirements.txt" ]
+then
+    pip install -r requirements.txt
+fi
 
 # download articles and create json databases
 
@@ -32,8 +36,6 @@ fi
 # python3 src/datasets/gen_db.py
 
 # launch app
-
-cd web/
 
 uvicorn server:app --host 0.0.0.0 --port 8000 &
 UVICORN_PID=$!

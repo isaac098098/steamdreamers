@@ -58,7 +58,7 @@ const MostUsedTagsChart = ({ tagCounts }) => {
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    color: "white",
+                                    color: "#fff",
                                     textShadow: "0px 0px 2px rgba(0,0,0,0.7)",
                                     fontWeight: "bold",
                                     fontSize: barWidth < 25 ? "11px" : "14px",
@@ -80,7 +80,7 @@ const MostUsedTagsChart = ({ tagCounts }) => {
                                         left: "50%",
                                         transform: "translateX(-50%)",
                                         background: "#333",
-                                        color: "white",
+                                        color: "#000",
                                         padding: "3px 8px",
                                         borderRadius: "4px",
                                         fontSize: "11px",
@@ -96,7 +96,7 @@ const MostUsedTagsChart = ({ tagCounts }) => {
                             width: "35px", 
                             textAlign: "right",
                             fontSize: "0.8rem",
-                            color: "#fff"
+                            color: "#000"
                         }}>
                             {count}
                         </div>
